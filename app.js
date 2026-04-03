@@ -1,4 +1,6 @@
-document.addEventListener('DOMContentLoaded', () => {
+alert("JS is working!");
+
+//document.addEventListener('DOMContentLoaded', () => {
 
   // 🔴 TEST CODE
   document.getElementById('login-btn').addEventListener('click', () => {
@@ -172,4 +174,4 @@ exportExcelBtn.addEventListener('click', ()=>{
   const ws = XLSX.utils.table_to_sheet(timetableGrid);
   XLSX.utils.book_append_sheet(wb, ws, currentCategory);
   XLSX.writeFile(wb, `Timetable_${currentCategory}.xlsx`);
-});
+});//
