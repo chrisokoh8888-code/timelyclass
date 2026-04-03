@@ -4,6 +4,11 @@ body {
   background: #f7f7f7;
   text-align: center;
 }
+#login-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
 
 .logo {
   display: block;
