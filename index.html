@@ -1,0 +1,47 @@
+1️⃣ index.html
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClassGrid - School Timetable</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login-container">
+    <h2>Login to ClassGrid</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="login-btn">Login</button>
+    <p>Don't have an account? <button id="signup-btn">Sign Up</button></p>
+  </div>
+
+  <div id="timetable-container" style="display:none;">
+    <h2>My Timetable</h2>
+    <button id="logout-btn">Logout</button>
+    <table id="timetable-grid">
+      <thead>
+        <tr>
+          <th>Time/Day</th>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be added by JS -->
+      </tbody>
+    </table>
+    <button id="save-btn">Save Timetable</button>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
