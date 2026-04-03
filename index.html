@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ClassGrid</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>ClassGrid</h1>
+    <p>Smart Timetable Generator</p>
+
+    <!-- FORM -->
+    <div class="form">
+      <input id="schoolName" placeholder="School Name">
+      <input id="subjects" placeholder="Subjects (Math,English,Bio)">
+      <input id="periods" type="number" placeholder="Periods per day">
+      <input id="days" type="number" placeholder="Days per week">
+
+      <button onclick="generate()">Generate Timetable</button>
+    </div>
+
+    <!-- OUTPUT -->
+    <div id="output"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
