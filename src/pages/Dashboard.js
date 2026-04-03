@@ -1,24 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { generateTimetable } from "../utils/generator";
-import { saveTimetable, getUserTimetables } from "../services/firestore";
-import auth from "../services/auth";
-import Sidebar from "../components/Sidebar";
-import TimetableTable from "../components/TimetableTable";
 
 export default function Dashboard() {
   const [form, setForm] = useState({});
   const [timetable, setTimetable] = useState(null);
-  const [saved, setSaved] = useState([]);
 
-  const user = auth.currentUser;
-
-  useEffect(() => {
-    if (user) {
-      getUserTimetables(user.uid).then(setSaved);
-    }
-  }, [user]);
-
-  const handleChange = e => {
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -26,35 +13,27 @@ export default function Dashboard() {
     setTimetable(generateTimetable(form));
   };
 
-  const handleSave = async () => {
-    await saveTimetable(user.uid, { schoolName: form.schoolName, timetable });
-    alert("Saved!");
-  };
-
   return (
-    <div className="flex">
-      <Sidebar />
+    <div style={{ padding: "20px" }}>
+      <h1>ClassGrid Dashboard</h1>
 
-      <div className="p-6 flex-1">
-        <h1 className="text-2xl mb-4">Dashboard</h1>
+      <input name="schoolName" placeholder="School Name" onChange={handleChange} /><br /><br />
+      <input name="subjects" placeholder="Math,English,Bio" onChange={handleChange} /><br /><br />
+      <input name="periodsPerDay" placeholder="Periods per day" onChange={handleChange} /><br /><br />
+      <input name="daysPerWeek" placeholder="Days per week" onChange={handleChange} /><br /><br />
 
-        <input name="schoolName" placeholder="School Name" onChange={handleChange} />
-        <input name="subjects" placeholder="Math,English" onChange={handleChange} />
+      <button onClick={handleGenerate}>Generate Timetable</button>
 
-        <button onClick={handleGenerate}>Generate</button>
-
-        {timetable && (
-          <>
-            <TimetableTable timetable={timetable} />
-            <button onClick={handleSave}>Save</button>
-          </>
-        )}
-
-        <h2 className="mt-6">Saved</h2>
-        {saved.map((t, i) => (
-          <div key={i}>{t.schoolName}</div>
-        ))}
-      </div>
+      {timetable && (
+        <div style={{ marginTop: "20px" }}>
+          {Object.keys(timetable).map(day => (
+            <div key={day}>
+              <h3>{day}</h3>
+              <p>{timetable[day].join(" | ")}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
