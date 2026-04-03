@@ -1,3 +1,12 @@
+document.addEventListener('DOMContentLoaded', () => {
+
+  // 🔴 TEST CODE
+  document.getElementById('login-btn').addEventListener('click', () => {
+    alert('Login button clicked');
+  });
+
+});
+
 // Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDEoau0QUKPdGiQgHR8UsAM3mlq20P6wnQ",
