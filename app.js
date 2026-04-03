@@ -1,6 +1,4 @@
-alert("JS is working!");
-
-//document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
 
   // 🔴 TEST CODE
   document.getElementById('login-btn').addEventListener('click', () => {
@@ -11,12 +9,12 @@ alert("JS is working!");
 
 // Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyDEoau0QUKPdGiQgHR8UsAM3mlq20P6wnQ",
-    authDomain: "timelyclass-d9ce2.firebaseapp.com",
-    projectId: "timelyclass-d9ce2",
-    storageBucket: "timelyclass-d9ce2.firebasestorage.app",
-    messagingSenderId: "433350841480",
-    appId: "1:433350841480:web:2294a465abc6e410ed3b3d
+    apiKey:"AIzaSyDEoau0QUKPdGiQgHR8UsAM3mlq20P6wnQ",
+    authDomain:"timelyclass-d9ce2.firebaseapp.com",
+    projectId:"timelyclass-d9ce2",
+    storageBucket:"timelyclass-d9ce2.firebasestorage.app",
+    messagingSenderId:"433350841480",
+    appId:"1:433350841480:web:2294a465abc6e410ed3b3d
 };
 
 firebase.initializeApp(firebaseConfig);
