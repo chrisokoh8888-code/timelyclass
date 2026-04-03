@@ -51,6 +51,6 @@ button {
 
 /* Logo size: standard blog size */
 .logo {
-  height: 50px;          /* standard small logo size */
+  height: 90px;          /* standard small logo size */
   width: auto;           /* keep aspect ratio */
 }
