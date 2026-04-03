@@ -22,9 +22,9 @@ input, button {
   margin: 10px auto;
   padding: 12px;
   width: 100%;
-  max-width: 350px;   /* controls overall size */
+  max-width: 400px;   /* SAME as container */
   font-size: 16px;
-  box-sizing: border-box; /* VERY IMPORTANT */
+  box-sizing: border-box;
 }
 
 button {
