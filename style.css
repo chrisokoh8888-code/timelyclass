@@ -53,6 +53,6 @@ button {
 .logo {
   display: block;     /* makes it behave like a block element */
   margin: 0 auto;     /* automatically centers horizontally */
-  height: 90px;       /* readable size */
+  height: 120px;       /* readable size */
   width: auto;        /* keep aspect ratio */
 }
