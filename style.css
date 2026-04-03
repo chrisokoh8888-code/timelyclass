@@ -82,6 +82,6 @@ button:hover {
 .logo {
   display: block;     /* makes it behave like a block element */
   margin: 0 auto;     /* automatically centers horizontally */
-  height: 130px;       /* readable size */
+  height: 150px;       /* readable size */
   width: auto;        /* keep aspect ratio */
 }
