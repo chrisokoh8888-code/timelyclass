@@ -1,5 +1,3 @@
-import Dashboard from "./pages/Dashboard";
-
 export default function App() {
-  return <Dashboard />;
+  return <h1>ClassGrid is Working ✅</h1>;
 }
