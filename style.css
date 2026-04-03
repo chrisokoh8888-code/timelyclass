@@ -1,0 +1,43 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+h1 {
+  color: #2563eb;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+}
+
+button {
+  padding: 10px;
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.day {
+  margin-top: 15px;
+}
+
+.period {
+  background: #e5e7eb;
+  padding: 5px;
+  margin: 3px;
+  display: inline-block;
+}
