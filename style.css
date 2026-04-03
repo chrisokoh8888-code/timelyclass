@@ -70,3 +70,18 @@ button:hover {
     width: 95%;
   }
 }
+/* Header wrapper: logo on the left, title next to it */
+.header {
+  display: flex;          /* horizontal layout */
+  align-items: center;    /* vertically align logo and title */
+  gap: 10px;              /* space between logo and title */
+  margin-bottom: 15px;
+}
+
+/* Logo size: standard blog size */
+.logo {
+  display: block;     /* makes it behave like a block element */
+  margin: 0 auto;     /* automatically centers horizontally */
+  height: 130px;       /* readable size */
+  width: auto;        /* keep aspect ratio */
+}
