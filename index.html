@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TimelyClass</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <!-- SheetJS for Excel export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- jsPDF for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login-container">
+    <img src="logo.png" alt="TimelyClass Logo" class="logo">
+    <h2>Login to TimelyClass</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="login-btn">Login</button>
+    <p>Don't have an account? <button id="signup-btn">Sign Up</button></p>
+  </div>
+
+  <!-- SCHOOL SETUP -->
+  <div id="setup-container" style="display:none;">
+    <h2>Setup Your School Details</h2>
+    <input type="text" id="school-name" placeholder="School Name">
+    <input type="text" id="school-code" placeholder="School Code">
+    <input type="text" id="school-location" placeholder="Location">
+    <button id="save-setup-btn">Save Details</button>
+  </div>
+
+  <!-- TIMETABLE -->
+  <div id="timetable-container" style="display:none;">
+    <img src="logo.png" alt="TimelyClass Logo" class="logo">
+    <h2 id="school-title">My Timetable</h2>
+    <button id="logout-btn">Logout</button>
+    <button id="add-period-btn">Add Period</button>
+    <button id="remove-period-btn">Remove Last Period</button>
+    <button id="export-pdf-btn">Export PDF</button>
+    <button id="export-excel-btn">Export Excel</button>
+
+    <table id="timetable-grid">
+      <tr>
+        <th>Time / Day</th>
+        <th style="background-color:#FFDDC1;">Monday</th>
+        <th style="background-color:#C1FFD7;">Tuesday</th>
+        <th style="background-color:#C1D4FF;">Wednesday</th>
+        <th style="background-color:#FFF5C1;">Thursday</th>
+        <th style="background-color:#E2C1FF;">Friday</th>
+      </tr>
+      <tr>
+        <td contenteditable="true">8:00-9:00</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+      </tr>
+      <tr>
+        <td contenteditable="true">9:00-10:00</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+      </tr>
+    </table>
+    <button id="save-btn">Save Timetable</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
