@@ -41,3 +41,16 @@ button {
   margin: 3px;
   display: inline-block;
 }
+/* Header wrapper: logo on the left, title next to it */
+.header {
+  display: flex;          /* horizontal layout */
+  align-items: center;    /* vertically align logo and title */
+  gap: 10px;              /* space between logo and title */
+  margin-bottom: 15px;
+}
+
+/* Logo size: standard blog size */
+.logo {
+  height: 50px;          /* standard small logo size */
+  width: auto;           /* keep aspect ratio */
+}
