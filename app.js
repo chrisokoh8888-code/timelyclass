@@ -47,5 +47,28 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(err => alert(err.message));
 });
+saveSetupBtn.addEventListener('click', () => {
 
+    const schoolName = document.getElementById('school-name').value;
+    const schoolCode = document.getElementById('school-code').value;
+    const schoolLocation = document.getElementById('school-location').value;
+
+    const userId = auth.currentUser.uid;
+
+    database.ref('schools/' + userId).set({
+      schoolName,
+      schoolCode,
+      schoolLocation
+    })
+    .then(() => {
+      alert("School details saved!");
+
+      setupContainer.style.display = 'none';
+      categoryContainer.style.display = 'block';
+    })
+    .catch(error => {
+      alert(error.message);
+    });
+
+  });
 });
