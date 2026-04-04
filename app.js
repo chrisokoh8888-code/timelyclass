@@ -31,9 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
   loginBtn.addEventListener('click', () => {
-    auth.signInWithEmailAndPassword(email.value, password.value)
-      .then(user => alert("Login success: " + user.user.email))
-      .catch(err => alert(err.message));
-  });
+  auth.signInWithEmailAndPassword(email.value, password.value)
+    .then(user => {
+      alert("Login success: " + user.user.email);
+
+      // 👉 ADD THIS HERE
+      loginContainer.style.display = 'none';
+      setupContainer.style.display = 'block';
+    })
+    .catch(err => alert(err.message));
+});
 
 });
