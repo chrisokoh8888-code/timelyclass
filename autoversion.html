@@ -492,7 +492,171 @@ function toast(msg){
   setTimeout(()=>el.classList.remove('show'),3000);
 }
 
-</script>
+// =====================
+// BREAK SYSTEM
+// =====================
+function renderBreakCfg(){
+  const lbs=getPLabels();
+
+  document.getElementById('break-cfg').innerHTML=
+    Array.from({length:gP()},(_,i)=>{
+      const k=`p${i}`;
+      const v=breaks[k]||'';
+
+      return `
+      <div class="irow">
+        <span>${lbs[i]}</span>
+        <select onchange="setBreak(${i},this.value)">
+          <option value="" ${!v?'selected':''}>Lesson</option>
+          <option value="break" ${v==='break'?'selected':''}>Break</option>
+          <option value="lunch" ${v==='lunch'?'selected':''}>Lunch</option>
+        </select>
+      </div>`;
+    }).join('');
+}
+
+function setBreak(p,v){
+  if(v)breaks[`p${p}`]=v;
+  else delete breaks[`p${p}`];
+}
+
+// =====================
+// AVAILABILITY SYSTEM
+// =====================
+function renderAvail(){
+  const tid=parseInt(document.getElementById('avail-tea').value);
+  const area=document.getElementById('avail-area');
+
+  if(!tid){
+    area.innerHTML='<div class="empty">Select teacher</div>';
+    return;
+  }
+
+  if(!availability[tid])availability[tid]={};
+
+  const d=gD(),p=gP(),dns=gDS(),lbs=getPLabels();
+
+  let html='<table class="tt"><tr><th></th>';
+
+  dns.forEach(day=>{
+    html+=`<th>${day}</th>`;
+  });
+
+  html+='</tr>';
+
+  for(let pi=0;pi<p;pi++){
+    if(breaks[`p${pi}`])continue;
+
+    html+=`<tr><td>${lbs[pi]}</td>`;
+
+    for(let di=0;di<d;di++){
+      const key=`${di}-${pi}`;
+      const blocked=availability[tid][key];
+
+      html+=`
+      <td onclick="toggleAvail(${tid},'${key}')"
+          style="background:${blocked?'#FCEBEB':'#E8F5E9'};cursor:pointer">
+          ${blocked?'✕':'✓'}
+      </td>`;
+    }
+
+    html+='</tr>';
+  }
+
+  html+='</table>';
+  area.innerHTML=html;
+}
+
+function toggleAvail(tid,key){
+  if(!availability[tid])availability[tid]={};
+
+  if(availability[tid][key]){
+    delete availability[tid][key];
+  } else {
+    availability[tid][key]=true;
+  }
+
+  renderAvail();
+}
+
+// =====================
+// AUTO GENERATION ENGINE
+// =====================
+function generateAll(){
+
+  if(!subjects.length)return toast('Add subjects first');
+  if(!teachers.length)return toast('Add teachers first');
+  if(!classes.length)return toast('Add classes first');
+
+  const d=gD();
+  const p=gP();
+
+  classes.forEach(cls=>{
+
+    const tt=mkTT();
+
+    // AVAILABLE SLOTS
+    const slots=[];
+    for(let di=0;di<d;di++){
+      for(let pi=0;pi<p;pi++){
+        if(!breaks[`p${pi}`]){
+          slots.push({di,pi});
+        }
+      }
+    }
+
+    // REQUIRED SUBJECT SLOTS
+    const needed=[];
+
+    subjects.forEach(s=>{
+      const tea=teachers.filter(t=>t.subjectId===s.id);
+
+      if(!tea.length)return;
+
+      for(let i=0;i<s.periods;i++){
+        needed.push({
+          subjectId:s.id,
+          teacherId:tea[i % tea.length].id
+        });
+      }
+    });
+
+    shuffle(needed);
+
+    let ni=0;
+
+    for(const {di,pi} of slots){
+
+      if(ni>=needed.length)break;
+
+      const item=needed[ni];
+
+      // CHECK AVAILABILITY
+      if(!(availability[item.teacherId] &&
+           availability[item.teacherId][`${di}-${pi}`])){
+
+        tt[di][pi]=item;
+        ni++;
+      }
+    }
+
+    timetables[cls.id]=tt;
+  });
+
+  toast('Timetable generated!');
+}
+
+// =====================
+// SHUFFLE
+// =====================
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
 
 </body>
 </html>
