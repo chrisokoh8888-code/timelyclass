@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimal Timetable</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+  th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+  th { background-color: #4CAF50; color: white; }
+  td.subject { color: white; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h2>Minimal Timetable Example</h2>
+<table id="timetable">
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>Monday</th>
+      <th>Tuesday</th>
+      <th>Wednesday</th>
+      <th>Thursday</th>
+      <th>Friday</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+// ===== PARAMETERS =====
+const timeSlots = ["08:00-09:00", "09:00-10:00", "10:15-11:15", "11:15-12:15", "13:00-14:00"];
+const classes = [
+  { subject: "Math", teacher: "Mr. John", room: "Room 101", color: "#1f77b4" },
+  { subject: "English", teacher: "Mrs. Ada", room: "Room 102", color: "#ff7f0e" },
+  { subject: "Physics Lab", teacher: "Dr. Mike", room: "Lab 1", color: "#2ca02c" },
+  { subject: "Chemistry Lab", teacher: "Dr. Mike", room: "Lab 2", color: "#d62728" }
+];
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+// ===== GENERATE TIMETABLE =====
+function generateTimetable() {
+  const tbody = document.querySelector("#timetable tbody");
+  tbody.innerHTML = "";
+
+  for (let i = 0; i < timeSlots.length; i++) {
+    const tr = document.createElement("tr");
+
+    // Time column
+    const timeCell = document.createElement("td");
+    timeCell.textContent = timeSlots[i];
+    tr.appendChild(timeCell);
+
+    // Day columns
+    days.forEach(day => {
+      const td = document.createElement("td");
+      // Randomly assign a class for demo purposes
+      const cls = classes[Math.floor(Math.random() * classes.length)];
+      td.textContent = `${cls.subject} (${cls.teacher}, ${cls.room})`;
+      td.style.backgroundColor = cls.color;
+      td.classList.add("subject");
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  }
+}
+
+// Generate timetable on page load
+window.onload = generateTimetable;
+</script>
+
+</body>
+</html>
