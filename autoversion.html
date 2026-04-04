@@ -270,7 +270,229 @@ table.tt td{
 
 <div class="toast" id="toast"></div>
 
-<!-- SCRIPT CONTINUES IN PART 2 -->
+<script>
+
+// ===== CONSTANTS =====
+const D5=['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const D6=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DS5=['Mon','Tue','Wed','Thu','Fri'];
+const DS6=['Mon','Tue','Wed','Thu','Fri','Sat'];
+
+const COLS={
+blue:{bg:'#E6F1FB',tx:'#0C447C'},
+teal:{bg:'#E1F5EE',tx:'#085041'},
+purple:{bg:'#EEEDFE',tx:'#3C3489'},
+amber:{bg:'#FAEEDA',tx:'#633806'},
+coral:{bg:'#FAECE7',tx:'#712B13'}
+};
+
+const BC={
+blue:'b-blue',
+teal:'b-teal',
+purple:'b-purple',
+amber:'b-amber',
+coral:'b-coral'
+};
+
+// ===== GLOBAL STATE =====
+let subjects=[];
+let teachers=[];
+let classes=[];
+let timetables={};
+let breaks={};
+let availability={};
+let editSlot=null;
+
+// ===== SETTINGS HELPERS =====
+const gD=()=>parseInt(document.getElementById('sdays').value)||5;
+const gP=()=>parseInt(document.getElementById('ppd').value)||7;
+const gDN=()=>gD()===6?D6:D5;
+const gDS=()=>gD()===6?DS6:DS5;
+
+function pad(n){return n.toString().padStart(2,'0')}
+
+// ===== PERIOD LABELS =====
+function getPLabels(){
+  const start='08:00'.split(':').map(Number);
+  const dur=45;
+  const lbs=[];
+  let m=start[0]*60+start[1];
+
+  for(let i=0;i<gP();i++){
+    const h1=Math.floor(m/60);
+    const m1=m%60;
+    const h2=Math.floor((m+dur)/60);
+    const m2=(m+dur)%60;
+
+    lbs.push(`P${i+1} ${pad(h1)}:${pad(m1)}–${pad(h2)}:${pad(m2)}`);
+    m+=dur;
+  }
+  return lbs;
+}
+
+// ===== TAB SYSTEM =====
+function showTab(t){
+  ['setup','breaks','avail','timetable','conflicts'].forEach((id,i)=>{
+    document.querySelectorAll('.tab')[i].classList.toggle('active',id===t);
+    document.getElementById('tab-'+id).classList.toggle('active',id===t);
+  });
+}
+
+// =====================
+// SUBJECTS
+// =====================
+function addSubject(){
+  const n=document.getElementById('sname').value.trim();
+  if(!n)return toast('Enter subject name');
+
+  subjects.push({
+    id:Date.now(),
+    name:n,
+    periods:parseInt(document.getElementById('sper').value)||5,
+    color:document.getElementById('scol').value
+  });
+
+  document.getElementById('sname').value='';
+  renderSubjects();
+  syncSubjSels();
+}
+
+function removeSubject(id){
+  subjects=subjects.filter(s=>s.id!==id);
+  renderSubjects();
+  syncSubjSels();
+}
+
+function renderSubjects(){
+  const el=document.getElementById('sublist');
+
+  el.innerHTML=subjects.length
+    ? subjects.map(s=>`
+      <div class="irow">
+        <span>${s.name} (${s.periods}/wk)</span>
+        <button class="btn btn-d" onclick="removeSubject(${s.id})">Remove</button>
+      </div>
+    `).join('')
+    : '<div class="empty">No subjects yet</div>';
+}
+
+function syncSubjSels(){
+  const opts='<option value="">Select</option>'+
+    subjects.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+
+  document.getElementById('tsubj').innerHTML=opts;
+
+  const ms=document.getElementById('m-sub');
+  if(ms){
+    ms.innerHTML='<option value="">Free</option>'+subjects.map(s=>`
+      <option value="${s.id}">${s.name}</option>`).join('');
+  }
+}
+
+// =====================
+// TEACHERS
+// =====================
+function addTeacher(){
+  const n=document.getElementById('tname').value.trim();
+  const sid=parseInt(document.getElementById('tsubj').value);
+
+  if(!n)return toast('Enter teacher name');
+  if(!sid)return toast('Select subject');
+
+  teachers.push({
+    id:Date.now(),
+    name:n,
+    subjectId:sid,
+    room:document.getElementById('troom').value.trim()
+  });
+
+  document.getElementById('tname').value='';
+  document.getElementById('troom').value='';
+
+  renderTeachers();
+}
+
+function removeTeacher(id){
+  teachers=teachers.filter(t=>t.id!==id);
+  delete availability[id];
+  renderTeachers();
+}
+
+function renderTeachers(){
+  const el=document.getElementById('tealist');
+
+  el.innerHTML=teachers.length
+    ? teachers.map(t=>{
+        const sub=subjects.find(s=>s.id===t.subjectId);
+        return `
+        <div class="irow">
+          <span>${t.name} (${sub?sub.name:''})</span>
+          <button class="btn btn-d" onclick="removeTeacher(${t.id})">Remove</button>
+        </div>`;
+      }).join('')
+    : '<div class="empty">No teachers yet</div>';
+}
+
+// =====================
+// CLASSES
+// =====================
+function addClass(){
+  const n=document.getElementById('cname').value.trim();
+
+  if(!n)return toast('Enter class name');
+
+  const cls={
+    id:Date.now(),
+    name:n,
+    size:parseInt(document.getElementById('csize').value)||30
+  };
+
+  classes.push(cls);
+  timetables[cls.id]=mkTT();
+
+  document.getElementById('cname').value='';
+
+  renderClasses();
+}
+
+function removeClass(id){
+  classes=classes.filter(c=>c.id!==id);
+  delete timetables[id];
+  renderClasses();
+}
+
+function renderClasses(){
+  const el=document.getElementById('classlist');
+
+  el.innerHTML=classes.length
+    ? classes.map(c=>`
+      <div class="irow">
+        <span>${c.name} (${c.size})</span>
+        <button class="btn btn-d" onclick="removeClass(${c.id})">Remove</button>
+      </div>
+    `).join('')
+    : '<div class="empty">No classes yet</div>';
+}
+
+// ===== TIMETABLE STRUCTURE =====
+function mkTT(){
+  const tt=[];
+  for(let d=0;d<6;d++){
+    tt.push([]);
+    for(let p=0;p<8;p++)tt[d].push(null);
+  }
+  return tt;
+}
+
+// ===== TOAST =====
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+</script>
 
 </body>
 </html>
