@@ -24,7 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginContainer = document.getElementById('login-container');
   const setupContainer = document.getElementById('setup-container');
   const categoryContainer = document.getElementById('category-container');
-
+  const timetableContainer = document.getElementById('timetable-container');
+  const categoryTitle = document.getElementById('category-title');
+  const categoryButtons = document.querySelectorAll('.category-btn');
+  
   const loginBtn = document.getElementById('login-btn');
   const signupBtn = document.getElementById('signup-btn');
   const saveSetupBtn = document.getElementById('save-setup-btn');
