@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const firebaseConfig = {
     apiKey: "AIzaSyDEoau0QUKPdGiQgHR8UsAM3mlq20P6wnQ",
     authDomain: "timelyclass-d9ce2.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+    databaseURL: "https://timelyclass-d9ce2.firebaseio.com",
     projectId: "timelyclass-d9ce2",
     storageBucket: "timelyclass-d9ce2.firebasestorage.app",
     messagingSenderId: "433350841480",
