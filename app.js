@@ -19,10 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const password = document.getElementById('password');
 
   signupBtn.addEventListener('click', () => {
-    auth.createUserWithEmailAndPassword(email.value, password.value)
-      .then(user => alert("Signup success: " + user.user.email))
-      .catch(err => alert(err.message));
-  });
+  auth.createUserWithEmailAndPassword(email.value, password.value)
+    .then(user => {
+      alert("Signup success: " + user.user.email);
+
+      // 👉 ADD THIS HERE
+      loginContainer.style.display = 'none';
+      setupContainer.style.display = 'block';
+    })
+    .catch(err => alert(err.message));
+});
 
   loginBtn.addEventListener('click', () => {
     auth.signInWithEmailAndPassword(email.value, password.value)
