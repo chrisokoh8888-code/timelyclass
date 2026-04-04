@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    apiKey: "AIzaSyDEoau0QUKPdGiQgHR8UsAM3mlq20P6wnQ",
+    authDomain: "timelyclass-d9ce2.firebaseapp.com",
     databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    projectId: "timelyclass-d9ce2",
+    storageBucket: "timelyclass-d9ce2.firebasestorage.app",
+    messagingSenderId: "433350841480",
+    appId: "1:433350841480:web:2294a465abc6e410ed3b3d"
   };
 
   firebase.initializeApp(firebaseConfig);
