@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Timetable Generator</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{max-width:1200px;margin:0 auto;padding:1.25rem 1rem;font-family:Arial, sans-serif;color:#111}
+h1{font-size:22px;font-weight:500;margin-bottom:4px}
+.subtitle{font-size:13px;color:#666;margin-bottom:1.25rem}
+.tabs{display:flex;gap:0;border-bottom:1px solid #ddd;margin-bottom:1.25rem;overflow-x:auto}
+.tab{padding:8px 16px;font-size:13px;cursor:pointer;border:none;background:none;color:#666;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.active{color:#111;border-bottom-color:#111;font-weight:500}
+.panel{display:none}.panel.active{display:block}
+
+.card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:1.25rem;margin-bottom:1rem}
+.sec{font-size:14px;font-weight:500;margin-bottom:.875rem}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+
+.fg{display:flex;flex-direction:column;gap:4px}
+label{font-size:12px;color:#666}
+
+input,select{
+  height:34px;
+  padding:0 9px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  font-size:13px;
+  background:#fff;
+  width:100%;
+}
+
+.btn{
+  height:34px;
+  padding:0 14px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  font-size:12px;
+  cursor:pointer;
+  background:#fff;
+}
+
+.btn-p{background:#111;color:#fff}
+.btn-d{color:red;border-color:red}
+
+.ilist{display:flex;flex-direction:column;gap:5px;margin-top:10px}
+.irow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:7px 10px;
+  background:#f5f5f5;
+  border-radius:6px;
+  font-size:12px;
+}
+
+/* TIMETABLE */
+.tt-wrap{overflow-x:auto}
+table.tt{border-collapse:collapse;width:100%}
+table.tt th,table.tt td{
+  border:1px solid #ddd;
+  font-size:11px;
+  text-align:center;
+}
+table.tt th{
+  background:#f5f5f5;
+  padding:5px 6px;
+}
+table.tt td{
+  background:#fff;
+  cursor:pointer;
+  height:50px;
+}
+
+/* EMPTY */
+.empty{
+  text-align:center;
+  padding:2rem 1rem;
+  color:#666;
+  font-size:13px;
+}
+
+/* MODAL */
+.modal-bg{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  z-index:200;
+  align-items:center;
+  justify-content:center;
+}
+.modal-bg.open{display:flex}
+
+.modal{
+  background:#fff;
+  border-radius:8px;
+  padding:1.25rem;
+  width:360px;
+  max-width:90vw;
+  border:1px solid #ccc;
+}
+
+.modal h3{
+  font-size:15px;
+  margin-bottom:.875rem;
+}
+
+.modal-btns{
+  display:flex;
+  gap:7px;
+  justify-content:flex-end;
+  margin-top:.875rem;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#111;
+  color:#fff;
+  padding:9px 18px;
+  border-radius:6px;
+  font-size:13px;
+  z-index:999;
+  opacity:0;
+  transition:.2s;
+}
+.toast.show{opacity:1}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .row2,.row3,.row4{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+<h1>School Timetable Generator</h1>
+<p class="subtitle">Configure subjects, teachers, breaks and availability — then auto-generate and export schedules.</p>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="showTab('setup')">Setup</button>
+  <button class="tab" onclick="showTab('breaks')">Breaks</button>
+  <button class="tab" onclick="showTab('avail')">Availability</button>
+  <button class="tab" onclick="showTab('timetable')">Timetable</button>
+  <button class="tab" onclick="showTab('conflicts')">Conflicts</button>
+</div>
+
+<!-- SETUP -->
+<div id="tab-setup" class="panel active">
+
+  <div class="card">
+    <div class="sec">School Settings</div>
+    <div class="row3">
+      <select id="level">
+        <option value="primary">Primary</option>
+        <option value="secondary" selected>Secondary</option>
+      </select>
+      <select id="ppd">
+        <option>5</option><option>6</option><option selected>7</option>
+      </select>
+      <select id="sdays">
+        <option value="5">Mon–Fri</option>
+        <option value="6">Mon–Sat</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">Subjects</div>
+    <div class="row4">
+      <input type="text" id="sname" placeholder="Subject">
+      <input type="number" id="sper" value="5">
+      <select id="scol">
+        <option value="blue">Blue</option>
+        <option value="teal">Teal</option>
+        <option value="purple">Purple</option>
+      </select>
+      <button class="btn btn-p" onclick="addSubject()">Add</button>
+    </div>
+    <div class="ilist" id="sublist"></div>
+  </div>
+
+  <div class="card">
+    <div class="sec">Teachers</div>
+    <div class="row4">
+      <input type="text" id="tname" placeholder="Teacher name">
+      <select id="tsubj"></select>
+      <input type="text" id="troom" placeholder="Room">
+      <button class="btn btn-p" onclick="addTeacher()">Add</button>
+    </div>
+    <div class="ilist" id="tealist"></div>
+  </div>
+
+  <div class="card">
+    <div class="sec">Classes</div>
+    <div class="row3">
+      <input type="text" id="cname" placeholder="Class name">
+      <input type="number" id="csize" value="30">
+      <button class="btn btn-p" onclick="addClass()">Add</button>
+    </div>
+    <div class="ilist" id="classlist"></div>
+  </div>
+
+</div>
+
+<!-- BREAKS -->
+<div id="tab-breaks" class="panel">
+  <div class="card">
+    <div class="sec">Breaks</div>
+    <div id="break-cfg"></div>
+  </div>
+</div>
+
+<!-- AVAILABILITY -->
+<div id="tab-avail" class="panel">
+  <div class="card">
+    <div class="sec">Teacher Availability</div>
+    <select id="avail-tea"></select>
+    <div id="avail-area"></div>
+  </div>
+</div>
+
+<!-- TIMETABLE -->
+<div id="tab-timetable" class="panel">
+  <div class="card">
+    <button class="btn btn-p" onclick="generateAll()">Auto Generate</button>
+    <div id="tt-area">
+      <div class="empty">Add data and generate timetable</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFLICTS -->
+<div id="tab-conflicts" class="panel">
+  <div class="card">
+    <div id="conflict-area"></div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="slot-modal">
+  <div class="modal">
+    <h3>Edit Slot</h3>
+    <select id="m-sub"></select>
+    <select id="m-tea"></select>
+    <input type="text" id="m-room">
+    <div class="modal-btns">
+      <button class="btn btn-d" onclick="clearSlot()">Clear</button>
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-p" onclick="saveSlot()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- SCRIPT CONTINUES IN PART 2 -->
+
+</body>
+</html>
