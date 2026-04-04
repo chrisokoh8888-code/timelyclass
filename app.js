@@ -12,12 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
+  const database = firebase.database();
   // 🔥 ADD THESE HERE
-const loginContainer = document.getElementById('login-container');
-const setupContainer = document.getElementById('setup-container');
+ const loginContainer = document.getElementById('login-container');
+ const setupContainer = document.getElementById('setup-container');
+ const categoryContainer = document.getElementById('category-container');
   
   const loginBtn = document.getElementById('login-btn');
   const signupBtn = document.getElementById('signup-btn');
+  const saveSetupBtn = document.getElementById('save-setup-btn');
   const email = document.getElementById('email');
   const password = document.getElementById('password');
 
